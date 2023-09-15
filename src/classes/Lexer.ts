@@ -1,8 +1,9 @@
+import { TokenTypes } from '../enums/TokenTypes.enum'
 import { error } from '../utils/ErrorHandler'
-import { LiteralToken, Token, TokenInterface, TokenType, typeToString } from './Token'
+import { Token } from './Token'
 
 export default class Lexer {
-  private _tokens: TokenInterface[] = []
+  private _tokens: Token[] = []
 
   constructor(private input: string) { }
 
@@ -23,25 +24,25 @@ export default class Lexer {
 
         if (!/^\d+(\.\d+)?$/.test(nStr)) error("Not a valid number")
 
-        this.addToken(new LiteralToken(TokenType.NUMBER, parseFloat(nStr)))
+        this.addToken(new Token(TokenTypes.NUMBER, parseFloat(nStr)))
       } else if (char === "(") {
-        this.addTokenAndConsume(new Token(TokenType.OPENPAREN))
+        this.addTokenAndConsume(new Token(TokenTypes.OPENPAREN))
       } else if (char === ")") {
-        this.addTokenAndConsume(new Token(TokenType.CLOSEPAREN))
+        this.addTokenAndConsume(new Token(TokenTypes.CLOSEPAREN))
       } else if (char === "+") {
-        this.addTokenAndConsume(new Token(TokenType.ADD))
+        this.addTokenAndConsume(new Token(TokenTypes.ADD))
       } else if (char === "-") {
-        this.addTokenAndConsume(new Token(TokenType.SUB))
+        this.addTokenAndConsume(new Token(TokenTypes.SUB))
       } else if (char === "*") {
         if (this.getNext() === "*") {
-          this.addTokenAndConsume(new Token(TokenType.POW), 2)
+          this.addTokenAndConsume(new Token(TokenTypes.POW), 2)
         } else {
-          this.addTokenAndConsume(new Token(TokenType.MUL))
+          this.addTokenAndConsume(new Token(TokenTypes.MUL))
         }
       } else if (char === "/") {
-        this.addTokenAndConsume(new Token(TokenType.DIV))
+        this.addTokenAndConsume(new Token(TokenTypes.DIV))
       } else if (char === "%") {
-        this.addTokenAndConsume(new Token(TokenType.MOD))
+        this.addTokenAndConsume(new Token(TokenTypes.MOD))
       } else {
         throw new Error(`Unrecognised token: "${char}"`)
       }
@@ -49,7 +50,7 @@ export default class Lexer {
       this.input = this.input.trimStart()
     } while (this.input.length > 0)
 
-    this.addToken(new Token(TokenType.EOF))
+    this.addToken(new Token(TokenTypes.EOF))
   }
 
   private getLiteral(matchPattern: RegExp) {
@@ -80,10 +81,10 @@ export default class Lexer {
     if (!this.hasAnalyzed()) this.parse()
 
     for (const token of this._tokens) {
-      if (token instanceof LiteralToken) {
-        console.log(`Type: ${typeToString(token.type)} | Value: ${token.lexeme}`)
+      if (token.value != null) {
+        console.log(`Type: ${token.type} | Value: ${token.value}`)
       } else {
-        console.log(`Type: ${typeToString(token.type)}`)
+        console.log(`Type: ${token.type}`)
       }
     }
 
@@ -96,12 +97,12 @@ export default class Lexer {
     return this._tokens
   }
 
-  private addTokenAndConsume(token: TokenInterface, i = 1) {
+  private addTokenAndConsume(token: Token, i = 1) {
     this.addToken(token)
     this.consume(i)
   }
 
-  private addToken(token: TokenInterface) {
+  private addToken(token: Token) {
     this._tokens.push(token)
   }
 }
