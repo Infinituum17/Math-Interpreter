@@ -1,5 +1,5 @@
 
-import { Expression } from "../types/ExpressionTypes"
+import { ASTNode } from "../types/ASTTypes"
 import { LiteralTypes, OperationTypes, TokenTypes } from "../types/TypeEnums"
 import { Token } from "./Token"
 
@@ -28,7 +28,7 @@ export class Parser {
     return this.parseExpression()
   }
 
-  private parseExpression(): Expression {
+  private parseExpression(): ASTNode {
     let left = this.parseTerm()
 
     while (this.at().type === TokenTypes.ADD || this.at().type === TokenTypes.SUB) {
@@ -42,7 +42,7 @@ export class Parser {
     return left
   }
 
-  private parseTerm(): Expression {
+  private parseTerm(): ASTNode {
     let left = this.parseFactor()
 
     while (this.at().type === TokenTypes.MUL || this.at().type === TokenTypes.DIV) {
@@ -56,7 +56,7 @@ export class Parser {
     return left
   }
 
-  private parseFactor(): Expression {
+  private parseFactor(): ASTNode {
     let left = this.parseBase()
 
     while (this.at().type === TokenTypes.MOD || this.at().type === TokenTypes.POW) {
@@ -70,7 +70,7 @@ export class Parser {
     return left
   }
 
-  private parseBase(): Expression {
+  private parseBase(): ASTNode {
     let prefixOperator: TokenTypes | null = null
 
     if (this.at().type === TokenTypes.SUB) {

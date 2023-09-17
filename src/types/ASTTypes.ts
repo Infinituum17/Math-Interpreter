@@ -1,18 +1,18 @@
 import { LiteralTypes, OperationTypes, TokenTypes } from "./TypeEnums"
 
-export type Expression = BinaryOperation | Literal | UnaryOperation
+export type ASTNode = BinaryOperation | Literal | UnaryOperation
 
 export interface BinaryOperation {
   type: OperationTypes.BINARY,
   operator: TokenTypes,
-  left: Expression,
-  right: Expression
+  left: ASTNode,
+  right: ASTNode
 }
 
 export interface UnaryOperation {
   type: OperationTypes.UNARY,
   operator: TokenTypes,
-  value: Expression
+  value: ASTNode
 }
 
 export interface Literal {
