@@ -1,4 +1,3 @@
-
 import { ASTNode } from "../types/ASTTypes"
 import { LiteralTypes, OperationTypes, TokenTypes } from "../types/TypeEnums"
 import { Token } from "./Token"
@@ -45,7 +44,7 @@ export class Parser {
   private parseTerm(): ASTNode {
     let left = this.parseFactor()
 
-    while (this.at().type === TokenTypes.MUL || this.at().type === TokenTypes.DIV) {
+    while (this.at().type === TokenTypes.MUL || this.at().type === TokenTypes.DIV || this.at().type === TokenTypes.MOD) {
       const operator = this.at().type
       this.consume(this.at().type)
       const right = this.parseFactor()
@@ -59,7 +58,7 @@ export class Parser {
   private parseFactor(): ASTNode {
     let left = this.parseBase()
 
-    while (this.at().type === TokenTypes.MOD || this.at().type === TokenTypes.POW) {
+    while (this.at().type === TokenTypes.POW) {
       const operator = this.at().type
       this.consume(this.at().type)
       const right = this.parseBase()

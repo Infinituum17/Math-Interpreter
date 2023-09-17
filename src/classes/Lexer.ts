@@ -1,66 +1,63 @@
-
 import { TokenTypes } from '../types/TypeEnums'
 import { Token } from './Token'
 
 export default class Lexer {
-  private _tokens: Token[] = []
-
   constructor(private input: string) { }
 
-  public hasAnalyzed() {
-    return this._tokens.length != 0
-  }
+  public analyze(): Token[] {
+    const tokens: Token[] = []
 
-  private parse() {
     this.input = this.input.trim()
 
-    if (this.input.length === 0) return
-
-    do {
+    while (this.input.length > 0) {
       const char = this.input[0]
 
       if (/\d/.test(char)) {
-        const nStr = this.getLiteral(/\d|\./)
+        const len = this.getLiteralLength(/\d|\./)
+        const nStr = this.input.slice(0, len)
+        this.consume(len)
 
         if (!/^\d+(\.\d+)?$/.test(nStr)) {
           throw new Error("[ERROR] Not a valid number")
         }
 
-        this.addToken(new Token(TokenTypes.NUMBER, parseFloat(nStr)))
+        tokens.push(new Token(TokenTypes.NUMBER, parseFloat(nStr)))
       } else if (char === "(") {
-        this.addTokenAndConsume(new Token(TokenTypes.OPENPAREN))
+        tokens.push(new Token(TokenTypes.OPENPAREN))
+        this.consume(1)
       } else if (char === ")") {
-        this.addTokenAndConsume(new Token(TokenTypes.CLOSEPAREN))
+        tokens.push(new Token(TokenTypes.CLOSEPAREN))
+        this.consume(1)
       } else if (char === "+") {
-        this.addTokenAndConsume(new Token(TokenTypes.ADD))
+        tokens.push(new Token(TokenTypes.ADD))
+        this.consume(1)
       } else if (char === "-") {
-        this.addTokenAndConsume(new Token(TokenTypes.SUB))
+        tokens.push(new Token(TokenTypes.SUB))
+        this.consume(1)
       } else if (char === "*") {
         if (this.getNext() === "*") {
-          this.addTokenAndConsume(new Token(TokenTypes.POW), 2)
+          tokens.push(new Token(TokenTypes.POW))
+          this.consume(2)
         } else {
-          this.addTokenAndConsume(new Token(TokenTypes.MUL))
+          tokens.push(new Token(TokenTypes.MUL))
+          this.consume(1)
         }
       } else if (char === "/") {
-        this.addTokenAndConsume(new Token(TokenTypes.DIV))
+        tokens.push(new Token(TokenTypes.DIV))
+        this.consume(1)
       } else if (char === "%") {
-        this.addTokenAndConsume(new Token(TokenTypes.MOD))
+        tokens.push(new Token(TokenTypes.MOD))
+        this.consume(1)
       } else {
-        throw new Error(`Unrecognised token: "${char}"`)
+        throw new Error(`[ERROR] Unrecognised token: "${char}"`)
       }
 
       this.input = this.input.trimStart()
-    } while (this.input.length > 0)
+    }
 
-    this.addToken(new Token(TokenTypes.EOF))
-  }
+    tokens.push(new Token(TokenTypes.EOF))
 
-  private getLiteral(matchPattern: RegExp) {
-    const len = this.getLiteralLength(matchPattern)
-    const result = this.input.slice(0, len)
-    this.consume(len)
-
-    return result
+    return tokens
   }
 
   private getLiteralLength(matchPattern: RegExp) {
@@ -77,34 +74,5 @@ export default class Lexer {
 
   private consume(n: number) {
     this.input = this.input.slice(n)
-  }
-
-  public visualize(): string {
-    if (!this.hasAnalyzed()) this.parse()
-
-    for (const token of this._tokens) {
-      if (token.value != null) {
-        console.log(`Type: ${token.type} | Value: ${token.value}`)
-      } else {
-        console.log(`Type: ${token.type}`)
-      }
-    }
-
-    return ""
-  }
-
-  public get tokens() {
-    if (!this.hasAnalyzed()) this.parse()
-
-    return this._tokens
-  }
-
-  private addTokenAndConsume(token: Token, i = 1) {
-    this.addToken(token)
-    this.consume(i)
-  }
-
-  private addToken(token: Token) {
-    this._tokens.push(token)
   }
 }

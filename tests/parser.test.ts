@@ -6,7 +6,7 @@ import { LiteralTypes, OperationTypes, TokenTypes } from "../src/types/TypeEnums
 describe("Parser", () => {
   test("1 + 1", () => {
     const lexer = new Lexer("1 + 1")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
     const result = parser.parse()
 
     expect(result).toEqual({
@@ -25,7 +25,7 @@ describe("Parser", () => {
 
   test("10 * 3 + 4", () => {
     const lexer = new Lexer("10 * 3 + 4")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
     const result = parser.parse()
 
     expect(result).toEqual({
@@ -52,7 +52,7 @@ describe("Parser", () => {
 
   test("10 + 3 * 4", () => {
     const lexer = new Lexer("10 + 3 * 4")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
     const result = parser.parse()
 
     expect(result).toEqual({
@@ -79,7 +79,7 @@ describe("Parser", () => {
 
   test("(10 + 3.2) * 4", () => {
     const lexer = new Lexer("(10 + 3.2) * 4")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
     const result = parser.parse()
 
     expect(result).toEqual({
@@ -106,7 +106,7 @@ describe("Parser", () => {
 
   test("-3", () => {
     const lexer = new Lexer("-3")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
     const result = parser.parse()
 
     expect(result).toEqual({
@@ -121,14 +121,14 @@ describe("Parser", () => {
 
   test("--3", () => {
     const lexer = new Lexer("--3")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
 
     expect(parser.parse).toThrow()
   })
 
   test("1 + 2 ** 3", () => {
     const lexer = new Lexer("1 + 2 / 3 ** 4")
-    const parser = new Parser(lexer.tokens)
+    const parser = new Parser(lexer.analyze())
     const result = parser.parse()
 
     expect(result).toEqual({

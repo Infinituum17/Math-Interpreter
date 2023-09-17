@@ -5,7 +5,7 @@ import { TokenTypes } from "../src/types/TypeEnums"
 
 describe("Lexer", () => {
   test("1 + 1", () => {
-    const tokens = new Lexer("1 + 1").tokens
+    const tokens = new Lexer("1 + 1").analyze()
 
     expect(tokens).toBeArrayOfSize(4)
     expect(tokens).toEqual([
@@ -17,7 +17,7 @@ describe("Lexer", () => {
   })
 
   test("1.0 * 1", () => {
-    const tokens = new Lexer("1.0 * 1").tokens
+    const tokens = new Lexer("1.0 * 1").analyze()
 
     expect(tokens).toBeArrayOfSize(4)
     expect(tokens).toEqual([
@@ -29,7 +29,7 @@ describe("Lexer", () => {
   })
 
   test("2.15 /1.2", () => {
-    const tokens = new Lexer("2.15 /1.2").tokens
+    const tokens = new Lexer("2.15 /1.2").analyze()
 
     expect(tokens).toBeArrayOfSize(4)
     expect(tokens).toEqual([
@@ -41,7 +41,7 @@ describe("Lexer", () => {
   })
 
   test("(4- 3.55555)", () => {
-    const tokens = new Lexer("(4- 3.55555)").tokens
+    const tokens = new Lexer("(4- 3.55555)").analyze()
 
     expect(tokens).toBeArrayOfSize(6)
     expect(tokens).toEqual([
@@ -55,7 +55,7 @@ describe("Lexer", () => {
   })
 
   test("102 + 1002.2 ** 4 % 5", () => {
-    const tokens = new Lexer("102 + 1002.2 ** 4 % 5").tokens
+    const tokens = new Lexer("102 + 1002.2 ** 4 % 5").analyze()
 
     expect(tokens).toBeArrayOfSize(8)
     expect(tokens).toEqual([
