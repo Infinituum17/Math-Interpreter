@@ -1,5 +1,5 @@
-import { todo } from "./utils/ErrorHandler"
 import Lexer from "./classes/Lexer"
+import { Parser } from "./classes/Parser"
 
 function cli(argv: string[]) {
   const args = argv.slice(2)
@@ -14,21 +14,24 @@ function cli(argv: string[]) {
       return
 
     case "--tokenize":
-      const lexer = new Lexer(args.slice(1).join(""))
-
       console.log("Output:")
       console.log()
-      console.log(lexer.visualize())
+      console.log(new Lexer(args.slice(1).join("")).visualize())
 
       return
 
     case "--parse":
-      todo("Parser")
+      const lexer = new Lexer(args.slice(1).join(""))
+      const parser = new Parser(lexer.tokens)
+
+      console.log("Output:")
+      console.log()
+      console.log(parser.parse())
+
       return
 
     default:
-      todo("Default branch of 'cli' function")
-      return
+      throw new Error("Default branch of 'cli' function")
   }
 }
 

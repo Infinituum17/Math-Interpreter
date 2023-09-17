@@ -1,7 +1,7 @@
 import { describe, expect, test, } from "bun:test"
 import Lexer from "../src/classes/Lexer"
 import { Token } from "../src/classes/Token"
-import { TokenTypes } from "../src/enums/TokenTypes.enum"
+import { TokenTypes } from "../src/types/TypeEnums"
 
 describe("Lexer", () => {
   test("1 + 1", () => {

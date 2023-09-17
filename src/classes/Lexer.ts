@@ -1,5 +1,5 @@
-import { TokenTypes } from '../enums/TokenTypes.enum'
-import { error } from '../utils/ErrorHandler'
+
+import { TokenTypes } from '../types/TypeEnums'
 import { Token } from './Token'
 
 export default class Lexer {
@@ -22,7 +22,9 @@ export default class Lexer {
       if (/\d/.test(char)) {
         const nStr = this.getLiteral(/\d|\./)
 
-        if (!/^\d+(\.\d+)?$/.test(nStr)) error("Not a valid number")
+        if (!/^\d+(\.\d+)?$/.test(nStr)) {
+          throw new Error("[ERROR] Not a valid number")
+        }
 
         this.addToken(new Token(TokenTypes.NUMBER, parseFloat(nStr)))
       } else if (char === "(") {
