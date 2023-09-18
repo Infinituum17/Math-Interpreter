@@ -86,6 +86,8 @@ Supported constants:
 | E        | 2.7182... |
 
 ### Functions
+
+Supported functions:
 | Function | Syntax                         | Example     |
 | -------- | ------------------------------ | ----------- |
 | SQRT     | sqrt(\<expr>)                  | `sqrt(1)`   |
