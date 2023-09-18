@@ -120,10 +120,16 @@ describe("Parser", () => {
   })
 
   test("--3", () => {
-    const lexer = new Lexer("--3")
-    const parser = new Parser(lexer.analyze())
+    // TODO: Refactor when bun:test expect.toThrow is fixed
+    let error: unknown
 
-    expect(parser.parse).toThrow()
+    try {
+      new Parser(new Lexer("--3").analyze()).parse()
+    } catch (e) {
+      error = e
+    }
+
+    expect(error).toBeDefined()
   })
 
   test("1 + 2 ** 3", () => {

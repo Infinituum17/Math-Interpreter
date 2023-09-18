@@ -1,6 +1,6 @@
-import { ParseTypes, OperationTypes, TokenTypes } from "./TypeEnums"
+import { ParseTypes, OperationTypes, TokenTypes, Functions } from "./TypeEnums"
 
-export type ASTNode = BinaryOperation | Literal | UnaryOperation
+export type ASTNode = BinaryOperation | Literal | UnaryOperation | FunctionCall
 
 export interface BinaryOperation {
   type: OperationTypes.BINARY,
@@ -16,6 +16,12 @@ export interface UnaryOperation {
 }
 
 export interface Literal {
-  type: ParseTypes,
+  type: ParseTypes.NUMERIC,
   value: number
+}
+
+export interface FunctionCall {
+  type: ParseTypes.FUNCALL,
+  funtype: Functions,
+  args: ASTNode[]
 }

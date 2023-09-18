@@ -1,5 +1,5 @@
 import { ASTNode } from "../types/ASTTypes"
-import { ParseTypes, OperationTypes, TokenTypes } from "../types/TypeEnums"
+import { ParseTypes, OperationTypes, TokenTypes, Functions } from "../types/TypeEnums"
 
 export class Interpreter {
   public static eval(node: ASTNode): number {
@@ -14,11 +14,37 @@ export class Interpreter {
       const value = Interpreter.eval(node.value)
 
       return Interpreter.performUnaryOperation(operator, value)
+    } else if (node.type === ParseTypes.FUNCALL) {
+      const funtype = node.funtype
+      const args = node.args.map(arg => Interpreter.eval(arg))
+
+      return Interpreter.performFunctionCall(funtype, args)
     } else if (node.type === ParseTypes.NUMERIC) {
       return node.value
     }
 
     throw new Error("[ERROR] Unexpected type in AST tree")
+  }
+
+  private static performFunctionCall(type: Functions, args: number[]): number {
+    switch (type) {
+      case Functions.SQRT:
+        return Math.sqrt(args[0])
+      case Functions.COS:
+        return Math.cos(args[0])
+      case Functions.SIN:
+        return Math.sin(args[0])
+      case Functions.POW:
+        return Math.pow(args[0], args[1])
+      case Functions.ABS:
+        return Math.abs(args[0])
+      case Functions.TAN:
+        return Math.tan(args[0])
+      case Functions.ROUND:
+        return Math.round(args[0])
+      default:
+        throw new Error(`[ERROR] A valid function name was expected, but instead '${type}' was received`)
+    }
   }
 
   private static performUnaryOperation(operator: TokenTypes, value: number): number {

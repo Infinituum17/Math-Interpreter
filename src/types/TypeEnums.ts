@@ -1,5 +1,6 @@
 export enum ParseTypes {
-  NUMERIC = "Numeric"
+  NUMERIC = "Numeric",
+  FUNCALL = "Function"
 }
 
 export enum OperationTypes {
@@ -24,4 +25,14 @@ export enum TokenTypes {
 export enum Constants {
   PI = "PI",
   E = "E"
+}
+
+export enum Functions {
+  SQRT = "SQRT",
+  SIN = "SIN",
+  COS = "COS",
+  POW = "POW",
+  TAN = "TAN",
+  ABS = "ABS",
+  ROUND = "ROUND"
 }

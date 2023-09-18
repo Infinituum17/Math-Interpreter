@@ -1,5 +1,6 @@
-import { ASTNode } from "../types/ASTTypes"
-import { ParseTypes, OperationTypes, TokenTypes, Constants } from "../types/TypeEnums"
+import { ASTNode, Literal } from "../types/ASTTypes"
+import { ParseTypes, OperationTypes, TokenTypes, Constants, Functions } from "../types/TypeEnums"
+import { getFunctionArgLength, mapConstantsToValue } from "../utils/Utils"
 import { Token } from "./Token"
 
 export class Parser {
@@ -78,21 +79,27 @@ export class Parser {
     }
 
     if (this.at().type === TokenTypes.IDENTIFIER) {
-      const value = this.at().value!
+      const name = this.at().value!
       this.consume(TokenTypes.IDENTIFIER)
 
-      switch (value) {
-        case Constants.PI:
-          return { type: ParseTypes.NUMERIC, value: Math.PI }
-        case Constants.E:
-          return { type: ParseTypes.NUMERIC, value: Math.E }
-        default:
-          throw new Error(`[ERROR] Invalid identifier ${value}`)
+      if (name in Constants) {
+        return { type: ParseTypes.NUMERIC, value: mapConstantsToValue(name as Constants) }
+      }
+
+      if (name in Functions) {
+        const args = this.extractArguments()
+
+        if (!this.checkArgsNumber(name as Functions, args.length))
+          throw new Error(`[ERROR] Invalid number of arguments for function ${name}`)
+
+        return { type: ParseTypes.FUNCALL, args, funtype: name as Functions }
+      } else {
+        throw new Error(`[ERROR] Invalid identifier ${name}`)
       }
     }
 
     if (this.at().type === TokenTypes.NUMBER) {
-      let literal = { type: ParseTypes.NUMERIC, value: (this.at().value as number)! }
+      let literal = { type: ParseTypes.NUMERIC, value: (this.at().value as number)! } as Literal
       this.consume(TokenTypes.NUMBER)
 
       if (prefixOperator !== null) {
@@ -115,6 +122,23 @@ export class Parser {
     }
 
     throw new Error(`[ERROR] Expected a parenthesis token, an integer in input or a unary operation, instead received ${this.at().type}`)
+  }
+
+  private checkArgsNumber(type: Functions, len: number): boolean {
+    return getFunctionArgLength(type) === len
+  }
+
+  private extractArguments(): ASTNode[] {
+    const args: ASTNode[] = [];
+
+    this.consume(TokenTypes.OPENPAREN)
+
+    while (this.at().type !== TokenTypes.CLOSEPAREN) {
+      args.push(this.parseExpression())
+    }
+    this.consume(TokenTypes.CLOSEPAREN)
+
+    return args
   }
 }
 

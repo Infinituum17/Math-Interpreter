@@ -84,3 +84,14 @@ Supported constants:
 | -------- | --------- |
 | PI       | 3.1415... |
 | E        | 2.7182... |
+
+### Functions
+| Function | Syntax                         | Example     |
+| -------- | ------------------------------ | ----------- |
+| SQRT     | sqrt(\<expr>)                  | `sqrt(1)`   |
+| SIN      | sin(\<expr>)                   | `sin(1)`    |
+| COS      | cos(\<expr>)                   | `cos(1)`    |
+| TAN      | tan(\<expr>)                   | `tan(1)`    |
+| POW      | pow(\<base:expr>, \<exp:expr>) | `pow(1, 2)` |
+| ABS      | abs(\<expr>)                   | `abs(1)`    |
+| ROUND    | round(\<expr>)                 | `round(1)`  |

@@ -1,4 +1,4 @@
-import { Constants, TokenTypes } from '../types/TypeEnums'
+import { Constants, Functions, TokenTypes } from '../types/TypeEnums'
 import { Token } from './Token'
 
 export default class Lexer {
@@ -53,13 +53,11 @@ export default class Lexer {
         const iStr = this.input.slice(0, len).toUpperCase()
         this.consume(len)
 
-        if (iStr === Constants.PI) {
-          tokens.push(new Token(TokenTypes.IDENTIFIER, Constants.PI))
-        } else if (iStr === Constants.E) {
-          tokens.push(new Token(TokenTypes.IDENTIFIER, Constants.E))
-        } else {
-          throw new Error(`[ERROR] Not a valid identifier: ${iStr}`)
-        }
+        const id = this.getIdentifier(iStr);
+
+        tokens.push(new Token(TokenTypes.IDENTIFIER, id))
+      } else if (char === ",") {
+        this.consume(1)
       } else {
         throw new Error(`[ERROR] Unrecognised token: "${char}"`)
       }
@@ -70,6 +68,26 @@ export default class Lexer {
     tokens.push(new Token(TokenTypes.EOF))
 
     return tokens
+  }
+
+  private getIdentifier(identifier: string) {
+    switch (identifier) {
+      case Constants.PI:
+      case Constants.E:
+        return identifier
+
+      case Functions.SQRT:
+      case Functions.COS:
+      case Functions.SIN:
+      case Functions.POW:
+      case Functions.TAN:
+      case Functions.ABS:
+      case Functions.ROUND:
+        return identifier
+
+      default:
+        throw new Error(`[ERROR] Not a valid identifier: ${identifier}`)
+    }
   }
 
   private getLiteralLength(matchPattern: RegExp) {
