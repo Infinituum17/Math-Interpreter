@@ -32,5 +32,7 @@ export enum Functions {
   POW = "POW",
   TAN = "TAN",
   ABS = "ABS",
-  ROUND = "ROUND"
+  ROUND = "ROUND",
+  FLOOR = "FLOOR",
+  CEIL = "CEIL"
 }

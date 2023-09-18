@@ -42,6 +42,10 @@ export class Interpreter {
         return Math.tan(args[0])
       case Functions.ROUND:
         return Math.round(args[0])
+      case Functions.FLOOR:
+        return Math.floor(args[0])
+      case Functions.CEIL:
+        return Math.ceil(args[0])
       default:
         throw new Error(`[ERROR] A valid function name was expected, but instead '${type}' was received`)
     }

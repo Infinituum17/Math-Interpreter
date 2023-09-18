@@ -81,6 +81,8 @@ export default class Lexer {
       case Functions.TAN:
       case Functions.ABS:
       case Functions.ROUND:
+      case Functions.FLOOR:
+      case Functions.CEIL:
         return identifier
 
       default:

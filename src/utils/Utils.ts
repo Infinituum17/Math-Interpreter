@@ -17,6 +17,8 @@ export function getFunctionArgLength(type: Functions) {
     case Functions.TAN:
     case Functions.ABS:
     case Functions.ROUND:
+    case Functions.FLOOR:
+    case Functions.CEIL:
       return 1
     case Functions.POW:
       return 2

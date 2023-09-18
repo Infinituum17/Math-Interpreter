@@ -123,4 +123,14 @@ describe("Functions and Constants", () => {
 
     expect(error).toBeDefined()
   })
+
+  test("floor(1 - (1 / 3))", () => {
+    expect(Interpreter.eval(new Parser(new Lexer("floor(1 / 3)").analyze()).parse()))
+      .toBe(0)
+  })
+
+  test("ceil(1 / 3)", () => {
+    expect(Interpreter.eval(new Parser(new Lexer("ceil(1 / 3)").analyze()).parse()))
+      .toBe(1)
+  })
 })
