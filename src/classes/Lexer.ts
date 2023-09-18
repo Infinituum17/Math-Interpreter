@@ -57,6 +57,7 @@ export default class Lexer {
 
         tokens.push(new Token(TokenTypes.IDENTIFIER, id))
       } else if (char === ",") {
+        tokens.push(new Token(TokenTypes.SEPARATOR))
         this.consume(1)
       } else {
         throw new Error(`[ERROR] Unrecognised token: "${char}"`)

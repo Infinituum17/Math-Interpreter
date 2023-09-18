@@ -25,7 +25,11 @@ export class Parser {
   }
 
   public parse() {
-    return this.parseExpression()
+    const ast = this.parseExpression()
+
+    this.consume(TokenTypes.EOF)
+
+    return ast
   }
 
   private parseExpression(): ASTNode {
@@ -133,9 +137,12 @@ export class Parser {
 
     this.consume(TokenTypes.OPENPAREN)
 
-    while (this.at().type !== TokenTypes.CLOSEPAREN) {
+    while (this.peek().type === TokenTypes.SEPARATOR) {
       args.push(this.parseExpression())
+      this.consume(TokenTypes.SEPARATOR)
     }
+    args.push(this.parseExpression())
+
     this.consume(TokenTypes.CLOSEPAREN)
 
     return args

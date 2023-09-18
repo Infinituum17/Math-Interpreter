@@ -84,4 +84,43 @@ describe("Functions and Constants", () => {
     expect(Interpreter.eval(new Parser(new Lexer("round(1 / 3)").analyze()).parse()))
       .toBe(0)
   })
+
+  test(",,,", () => {
+    // TODO: Refactor when bun:test expect.toThrow is fixed
+    let error: unknown
+
+    try {
+      new Parser(new Lexer(",,,").analyze()).parse()
+    } catch (e) {
+      error = e
+    }
+
+    expect(error).toBeDefined()
+  })
+
+  test("1 + ,", () => {
+    // TODO: Refactor when bun:test expect.toThrow is fixed
+    let error: unknown
+
+    try {
+      new Parser(new Lexer("1 + ,").analyze()).parse()
+    } catch (e) {
+      error = e
+    }
+
+    expect(error).toBeDefined()
+  })
+
+  test("pow(2, 3)pow(4, 5)", () => {
+    // TODO: Refactor when bun:test expect.toThrow is fixed
+    let error: unknown
+
+    try {
+      new Parser(new Lexer("pow(2, 3)pow(4, 5)").analyze()).parse()
+    } catch (e) {
+      error = e
+    }
+
+    expect(error).toBeDefined()
+  })
 })

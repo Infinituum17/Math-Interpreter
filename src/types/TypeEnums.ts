@@ -9,6 +9,7 @@ export enum OperationTypes {
 }
 
 export enum TokenTypes {
+  SEPARATOR = "Separator",
   IDENTIFIER = "Identifier",
   NUMBER = "Number",
   ADD = "Addition",
