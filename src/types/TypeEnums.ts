@@ -1,11 +1,8 @@
-export enum ParseTypes {
+export enum ASTTypes {
   NUMERIC = "Numeric",
-  FUNCALL = "Function"
-}
-
-export enum OperationTypes {
-  BINARY = "BinaryOperation",
-  UNARY = "UnaryOperation"
+  FUNCALL = "Function",
+  OP_BINARY = "BinaryOperation",
+  OP_UNARY = "UnaryOperation"
 }
 
 export enum TokenTypes {

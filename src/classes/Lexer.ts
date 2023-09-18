@@ -1,11 +1,11 @@
 import { Constants, Functions, TokenTypes } from '../types/TypeEnums'
-import { Token } from './Token'
+import { BaseToken, IdentifierToken, LiteralToken, Token } from './Token'
 
 export default class Lexer {
   constructor(private input: string) { }
 
   public analyze(): Token[] {
-    const tokens: Token[] = []
+    const tokens: BaseToken[] = []
 
     this.input = this.input.trim()
 
@@ -21,7 +21,7 @@ export default class Lexer {
           throw new Error(`[ERROR] Not a valid number: ${nStr}`)
         }
 
-        tokens.push(new Token(TokenTypes.NUMBER, parseFloat(nStr)))
+        tokens.push(new LiteralToken(parseFloat(nStr)))
       } else if (char === "(") {
         tokens.push(new Token(TokenTypes.OPENPAREN))
         this.consume(1)
@@ -51,11 +51,8 @@ export default class Lexer {
       } else if (/[a-z]/i.test(char)) {
         const len = this.getLiteralLength(/[a-z]/i)
         const iStr = this.input.slice(0, len).toUpperCase()
+        tokens.push(new IdentifierToken(this.verifyIdentifier(iStr)))
         this.consume(len)
-
-        const id = this.getIdentifier(iStr);
-
-        tokens.push(new Token(TokenTypes.IDENTIFIER, id))
       } else if (char === ",") {
         tokens.push(new Token(TokenTypes.SEPARATOR))
         this.consume(1)
@@ -71,7 +68,7 @@ export default class Lexer {
     return tokens
   }
 
-  private getIdentifier(identifier: string) {
+  private verifyIdentifier(identifier: string) {
     switch (identifier) {
       case Constants.PI:
       case Constants.E:

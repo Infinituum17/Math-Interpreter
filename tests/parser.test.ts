@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import Lexer from "../src/classes/Lexer"
 import { Parser } from "../src/classes/Parser"
-import { ParseTypes, OperationTypes, TokenTypes } from "../src/types/TypeEnums"
+import { ASTTypes, TokenTypes } from "../src/types/TypeEnums"
 
 describe("Parser", () => {
   test("1 + 1", () => {
@@ -10,14 +10,14 @@ describe("Parser", () => {
     const result = parser.parse()
 
     expect(result).toEqual({
-      type: OperationTypes.BINARY,
+      type: ASTTypes.OP_BINARY,
       operator: TokenTypes.ADD,
       left: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 1
       },
       right: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 1
       }
     })
@@ -29,22 +29,22 @@ describe("Parser", () => {
     const result = parser.parse()
 
     expect(result).toEqual({
-      type: OperationTypes.BINARY,
+      type: ASTTypes.OP_BINARY,
       operator: TokenTypes.ADD,
       left: {
-        type: OperationTypes.BINARY,
+        type: ASTTypes.OP_BINARY,
         operator: TokenTypes.MUL,
         left: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 10
         },
         right: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 3
         }
       },
       right: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 4
       }
     })
@@ -56,21 +56,21 @@ describe("Parser", () => {
     const result = parser.parse()
 
     expect(result).toEqual({
-      type: OperationTypes.BINARY,
+      type: ASTTypes.OP_BINARY,
       operator: TokenTypes.ADD,
       left: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 10
       },
       right: {
-        type: OperationTypes.BINARY,
+        type: ASTTypes.OP_BINARY,
         operator: TokenTypes.MUL,
         left: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 3
         },
         right: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 4
         }
       }
@@ -83,22 +83,22 @@ describe("Parser", () => {
     const result = parser.parse()
 
     expect(result).toEqual({
-      type: OperationTypes.BINARY,
+      type: ASTTypes.OP_BINARY,
       operator: TokenTypes.MUL,
       left: {
-        type: OperationTypes.BINARY,
+        type: ASTTypes.OP_BINARY,
         operator: TokenTypes.ADD,
         left: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 10
         },
         right: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 3.2
         }
       },
       right: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 4
       }
     })
@@ -110,10 +110,10 @@ describe("Parser", () => {
     const result = parser.parse()
 
     expect(result).toEqual({
-      type: OperationTypes.UNARY,
+      type: ASTTypes.OP_UNARY,
       operator: TokenTypes.SUB,
       value: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 3
       }
     })
@@ -138,28 +138,28 @@ describe("Parser", () => {
     const result = parser.parse()
 
     expect(result).toEqual({
-      type: OperationTypes.BINARY,
+      type: ASTTypes.OP_BINARY,
       operator: TokenTypes.ADD,
       left: {
-        type: ParseTypes.NUMERIC,
+        type: ASTTypes.NUMERIC,
         value: 1
       },
       right: {
-        type: OperationTypes.BINARY,
+        type: ASTTypes.OP_BINARY,
         operator: TokenTypes.DIV,
         left: {
-          type: ParseTypes.NUMERIC,
+          type: ASTTypes.NUMERIC,
           value: 2
         },
         right: {
-          type: OperationTypes.BINARY,
+          type: ASTTypes.OP_BINARY,
           operator: TokenTypes.POW,
           left: {
-            type: ParseTypes.NUMERIC,
+            type: ASTTypes.NUMERIC,
             value: 3
           },
           right: {
-            type: ParseTypes.NUMERIC,
+            type: ASTTypes.NUMERIC,
             value: 4
           }
         }

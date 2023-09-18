@@ -1,25 +1,25 @@
 import { ASTNode } from "../types/ASTTypes"
-import { ParseTypes, OperationTypes, TokenTypes, Functions } from "../types/TypeEnums"
+import { ASTTypes, TokenTypes, Functions } from "../types/TypeEnums"
 
 export class Interpreter {
   public static eval(node: ASTNode): number {
-    if (node.type === OperationTypes.BINARY) {
+    if (node.type === ASTTypes.OP_BINARY) {
       const operator = node.operator
       const left = Interpreter.eval(node.left)
       const right = Interpreter.eval(node.right)
 
       return Interpreter.performBinaryOperation(left, operator, right)
-    } else if (node.type === OperationTypes.UNARY) {
+    } else if (node.type === ASTTypes.OP_UNARY) {
       const operator = node.operator
       const value = Interpreter.eval(node.value)
 
       return Interpreter.performUnaryOperation(operator, value)
-    } else if (node.type === ParseTypes.FUNCALL) {
+    } else if (node.type === ASTTypes.FUNCALL) {
       const funtype = node.funtype
       const args = node.args.map(arg => Interpreter.eval(arg))
 
       return Interpreter.performFunctionCall(funtype, args)
-    } else if (node.type === ParseTypes.NUMERIC) {
+    } else if (node.type === ASTTypes.NUMERIC) {
       return node.value
     }
 

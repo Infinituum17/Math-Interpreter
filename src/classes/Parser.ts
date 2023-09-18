@@ -1,18 +1,18 @@
 import { ASTNode, Literal } from "../types/ASTTypes"
-import { ParseTypes, OperationTypes, TokenTypes, Constants, Functions } from "../types/TypeEnums"
+import { ASTTypes, TokenTypes, Constants, Functions } from "../types/TypeEnums"
 import { getFunctionArgLength, mapConstantsToValue } from "../utils/Utils"
-import { Token } from "./Token"
+import { BaseToken, IdentifierToken, LiteralToken, Token } from "./Token"
 
 export class Parser {
   private cursor = 0
 
-  constructor(private tokens: Token[]) { }
+  constructor(private tokens: BaseToken[]) { }
 
-  private at(): Token {
+  private at(): BaseToken {
     return this.tokens[this.cursor]
   }
 
-  private peek(n = 1): Token {
+  private peek(n = 1): BaseToken {
     return this.tokens[this.cursor + n]
   }
 
@@ -27,7 +27,11 @@ export class Parser {
   public parse() {
     const ast = this.parseExpression()
 
-    this.consume(TokenTypes.EOF)
+    try {
+      this.consume(TokenTypes.EOF)
+    } catch (e) {
+      throw new Error(`[ERROR] Cannot parse remaining tokens, expected ${TokenTypes.EOF}`)
+    }
 
     return ast
   }
@@ -40,7 +44,7 @@ export class Parser {
       this.consume(this.at().type)
       const right = this.parseTerm()
 
-      left = { type: OperationTypes.BINARY, operator, left, right }
+      left = { type: ASTTypes.OP_BINARY, operator, left, right }
     }
 
     return left
@@ -54,7 +58,7 @@ export class Parser {
       this.consume(this.at().type)
       const right = this.parseFactor()
 
-      left = { type: OperationTypes.BINARY, operator, left, right }
+      left = { type: ASTTypes.OP_BINARY, operator, left, right }
     }
 
     return left
@@ -68,71 +72,79 @@ export class Parser {
       this.consume(this.at().type)
       const right = this.parseBase()
 
-      left = { type: OperationTypes.BINARY, operator, left, right }
+      left = { type: ASTTypes.OP_BINARY, operator, left, right }
     }
 
     return left
   }
 
   private parseBase(): ASTNode {
-    let prefixOperator: TokenTypes | null = null
-
-    if (this.at().type === TokenTypes.SUB) {
-      this.consume(TokenTypes.SUB)
-      prefixOperator = TokenTypes.SUB
-    }
+    let prefixOperator = (this.at().type === TokenTypes.SUB) ? this.parseUnary() : null
 
     if (this.at().type === TokenTypes.IDENTIFIER) {
-      const name = this.at().value!
-      this.consume(TokenTypes.IDENTIFIER)
-
-      if (name in Constants) {
-        return { type: ParseTypes.NUMERIC, value: mapConstantsToValue(name as Constants) }
-      }
-
-      if (name in Functions) {
-        const args = this.extractArguments()
-
-        if (!this.checkArgsNumber(name as Functions, args.length))
-          throw new Error(`[ERROR] Invalid number of arguments for function ${name}`)
-
-        return { type: ParseTypes.FUNCALL, args, funtype: name as Functions }
-      } else {
-        throw new Error(`[ERROR] Invalid identifier ${name}`)
-      }
+      return this.parseIdentifier()
     }
 
     if (this.at().type === TokenTypes.NUMBER) {
-      let literal = { type: ParseTypes.NUMERIC, value: (this.at().value as number)! } as Literal
-      this.consume(TokenTypes.NUMBER)
-
-      if (prefixOperator !== null) {
-        return { type: OperationTypes.UNARY, operator: prefixOperator, value: literal }
-      }
-
-      return literal
+      return this.parseLiteral(prefixOperator)
     }
 
     if (this.at().type === TokenTypes.OPENPAREN) {
-      this.consume(TokenTypes.OPENPAREN)
-      const expr = this.parseExpression()
-      this.consume(TokenTypes.CLOSEPAREN)
-
-      if (prefixOperator !== null) {
-        return { type: OperationTypes.UNARY, operator: prefixOperator, value: expr }
-      }
-
-      return expr
+      return this.parseFunctionCall(prefixOperator)
     }
 
     throw new Error(`[ERROR] Expected a parenthesis token, an integer in input or a unary operation, instead received ${this.at().type}`)
   }
 
-  private checkArgsNumber(type: Functions, len: number): boolean {
-    return getFunctionArgLength(type) === len
+  private parseUnary(): TokenTypes.SUB {
+    this.consume(TokenTypes.SUB)
+    return TokenTypes.SUB
   }
 
-  private extractArguments(): ASTNode[] {
+  private parseIdentifier(): ASTNode {
+    const name = (this.at() as IdentifierToken).value!
+    this.consume(TokenTypes.IDENTIFIER)
+
+    if (name in Constants) {
+      return { type: ASTTypes.NUMERIC, value: mapConstantsToValue(name as Constants) }
+    }
+
+    if (name in Functions) {
+      const args = this.parseFunctionArgs()
+
+      if (getFunctionArgLength(name as Functions) !== args.length)
+        throw new Error(`[ERROR] Invalid number of arguments for function ${name}`)
+
+      return { type: ASTTypes.FUNCALL, args, funtype: name as Functions }
+    } else {
+      throw new Error(`[ERROR] Invalid identifier ${name}`)
+    }
+  }
+
+  private parseLiteral(prefixOperator: TokenTypes.SUB | null): ASTNode {
+    let literal: Literal = { type: ASTTypes.NUMERIC, value: ((this.at() as LiteralToken).value)! }
+    this.consume(TokenTypes.NUMBER)
+
+    if (prefixOperator !== null) {
+      return { type: ASTTypes.OP_UNARY, operator: prefixOperator, value: literal }
+    }
+
+    return literal
+  }
+
+  private parseFunctionCall(prefixOperator: TokenTypes.SUB | null): ASTNode {
+    this.consume(TokenTypes.OPENPAREN)
+    const expr = this.parseExpression()
+    this.consume(TokenTypes.CLOSEPAREN)
+
+    if (prefixOperator !== null) {
+      return { type: ASTTypes.OP_UNARY, operator: prefixOperator, value: expr }
+    }
+
+    return expr
+  }
+
+  private parseFunctionArgs(): ASTNode[] {
     const args: ASTNode[] = [];
 
     this.consume(TokenTypes.OPENPAREN)

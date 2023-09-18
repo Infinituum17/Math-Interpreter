@@ -1,6 +1,6 @@
 import { describe, expect, test, } from "bun:test"
 import Lexer from "../src/classes/Lexer"
-import { Token } from "../src/classes/Token"
+import { LiteralToken, Token } from "../src/classes/Token"
 import { TokenTypes } from "../src/types/TypeEnums"
 
 describe("Lexer", () => {
@@ -9,9 +9,9 @@ describe("Lexer", () => {
 
     expect(tokens).toBeArrayOfSize(4)
     expect(tokens).toEqual([
-      new Token(TokenTypes.NUMBER, 1),
+      new LiteralToken(1),
       new Token(TokenTypes.ADD),
-      new Token(TokenTypes.NUMBER, 1),
+      new LiteralToken(1),
       new Token(TokenTypes.EOF)
     ])
   })
@@ -21,9 +21,9 @@ describe("Lexer", () => {
 
     expect(tokens).toBeArrayOfSize(4)
     expect(tokens).toEqual([
-      new Token(TokenTypes.NUMBER, 1),
+      new LiteralToken(1),
       new Token(TokenTypes.MUL),
-      new Token(TokenTypes.NUMBER, 1),
+      new LiteralToken(1),
       new Token(TokenTypes.EOF)
     ])
   })
@@ -33,9 +33,9 @@ describe("Lexer", () => {
 
     expect(tokens).toBeArrayOfSize(4)
     expect(tokens).toEqual([
-      new Token(TokenTypes.NUMBER, 2.15),
+      new LiteralToken(2.15),
       new Token(TokenTypes.DIV),
-      new Token(TokenTypes.NUMBER, 1.2),
+      new LiteralToken(1.2),
       new Token(TokenTypes.EOF)
     ])
   })
@@ -46,9 +46,9 @@ describe("Lexer", () => {
     expect(tokens).toBeArrayOfSize(6)
     expect(tokens).toEqual([
       new Token(TokenTypes.OPENPAREN),
-      new Token(TokenTypes.NUMBER, 4),
+      new LiteralToken(4),
       new Token(TokenTypes.SUB),
-      new Token(TokenTypes.NUMBER, 3.55555),
+      new LiteralToken(3.55555),
       new Token(TokenTypes.CLOSEPAREN),
       new Token(TokenTypes.EOF)
     ])
@@ -59,13 +59,13 @@ describe("Lexer", () => {
 
     expect(tokens).toBeArrayOfSize(8)
     expect(tokens).toEqual([
-      new Token(TokenTypes.NUMBER, 102),
+      new LiteralToken(102),
       new Token(TokenTypes.ADD),
-      new Token(TokenTypes.NUMBER, 1002.2),
+      new LiteralToken(1002.2),
       new Token(TokenTypes.POW),
-      new Token(TokenTypes.NUMBER, 4),
+      new LiteralToken(4),
       new Token(TokenTypes.MOD),
-      new Token(TokenTypes.NUMBER, 5),
+      new LiteralToken(5),
       new Token(TokenTypes.EOF)
     ])
   })
