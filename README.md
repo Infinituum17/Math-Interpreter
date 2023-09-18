@@ -97,3 +97,5 @@ Supported functions:
 | POW      | pow(\<base:expr>, \<exp:expr>) | `pow(1, 2)` |
 | ABS      | abs(\<expr>)                   | `abs(1)`    |
 | ROUND    | round(\<expr>)                 | `round(1)`  |
+| FLOOR    | floor(\<expr>)                 | `floor(1)`  |
+| CEIL     | ceil(\<expr>)                  | `ceil(1)`   |
