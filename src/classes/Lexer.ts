@@ -1,4 +1,4 @@
-import { TokenTypes } from '../types/TypeEnums'
+import { Constants, TokenTypes } from '../types/TypeEnums'
 import { Token } from './Token'
 
 export default class Lexer {
@@ -18,7 +18,7 @@ export default class Lexer {
         this.consume(len)
 
         if (!/^\d+(\.\d+)?$/.test(nStr)) {
-          throw new Error("[ERROR] Not a valid number")
+          throw new Error(`[ERROR] Not a valid number: ${nStr}`)
         }
 
         tokens.push(new Token(TokenTypes.NUMBER, parseFloat(nStr)))
@@ -48,6 +48,18 @@ export default class Lexer {
       } else if (char === "%") {
         tokens.push(new Token(TokenTypes.MOD))
         this.consume(1)
+      } else if (/[a-z]/i.test(char)) {
+        const len = this.getLiteralLength(/[a-z]/i)
+        const iStr = this.input.slice(0, len).toUpperCase()
+        this.consume(len)
+
+        if (iStr === Constants.PI) {
+          tokens.push(new Token(TokenTypes.IDENTIFIER, Constants.PI))
+        } else if (iStr === Constants.E) {
+          tokens.push(new Token(TokenTypes.IDENTIFIER, Constants.E))
+        } else {
+          throw new Error(`[ERROR] Not a valid identifier: ${iStr}`)
+        }
       } else {
         throw new Error(`[ERROR] Unrecognised token: "${char}"`)
       }
@@ -63,7 +75,7 @@ export default class Lexer {
   private getLiteralLength(matchPattern: RegExp) {
     let i = 1
 
-    while (matchPattern.test(this.input[i])) i++
+    while (matchPattern.test(this.input[i]) && i < this.input.length) i++
 
     return i
   }

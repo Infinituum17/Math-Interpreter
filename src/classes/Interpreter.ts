@@ -1,5 +1,5 @@
 import { ASTNode } from "../types/ASTTypes"
-import { LiteralTypes, OperationTypes, TokenTypes } from "../types/TypeEnums"
+import { ParseTypes, OperationTypes, TokenTypes } from "../types/TypeEnums"
 
 export class Interpreter {
   public static eval(node: ASTNode): number {
@@ -14,7 +14,7 @@ export class Interpreter {
       const value = Interpreter.eval(node.value)
 
       return Interpreter.performUnaryOperation(operator, value)
-    } else if (node.type === LiteralTypes.NUMERIC) {
+    } else if (node.type === ParseTypes.NUMERIC) {
       return node.value
     }
 

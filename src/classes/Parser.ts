@@ -1,5 +1,5 @@
 import { ASTNode } from "../types/ASTTypes"
-import { LiteralTypes, OperationTypes, TokenTypes } from "../types/TypeEnums"
+import { ParseTypes, OperationTypes, TokenTypes, Constants } from "../types/TypeEnums"
 import { Token } from "./Token"
 
 export class Parser {
@@ -77,8 +77,22 @@ export class Parser {
       prefixOperator = TokenTypes.SUB
     }
 
+    if (this.at().type === TokenTypes.IDENTIFIER) {
+      const value = this.at().value!
+      this.consume(TokenTypes.IDENTIFIER)
+
+      switch (value) {
+        case Constants.PI:
+          return { type: ParseTypes.NUMERIC, value: Math.PI }
+        case Constants.E:
+          return { type: ParseTypes.NUMERIC, value: Math.E }
+        default:
+          throw new Error(`[ERROR] Invalid identifier ${value}`)
+      }
+    }
+
     if (this.at().type === TokenTypes.NUMBER) {
-      let literal = { type: LiteralTypes.NUMERIC, value: this.at().value! }
+      let literal = { type: ParseTypes.NUMERIC, value: (this.at().value as number)! }
       this.consume(TokenTypes.NUMBER)
 
       if (prefixOperator !== null) {

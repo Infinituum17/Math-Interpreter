@@ -1,4 +1,4 @@
-import { LiteralTypes, OperationTypes, TokenTypes } from "./TypeEnums"
+import { ParseTypes, OperationTypes, TokenTypes } from "./TypeEnums"
 
 export type ASTNode = BinaryOperation | Literal | UnaryOperation
 
@@ -16,6 +16,6 @@ export interface UnaryOperation {
 }
 
 export interface Literal {
-  type: LiteralTypes,
+  type: ParseTypes,
   value: number
 }

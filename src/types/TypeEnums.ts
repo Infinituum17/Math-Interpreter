@@ -1,4 +1,4 @@
-export enum LiteralTypes {
+export enum ParseTypes {
   NUMERIC = "Numeric"
 }
 
@@ -8,6 +8,7 @@ export enum OperationTypes {
 }
 
 export enum TokenTypes {
+  IDENTIFIER = "Identifier",
   NUMBER = "Number",
   ADD = "Addition",
   SUB = "Subtraction",
@@ -18,4 +19,9 @@ export enum TokenTypes {
   OPENPAREN = "OpenParenthesis",
   CLOSEPAREN = "ClosedParenthesis",
   EOF = "End-Of-File"
+}
+
+export enum Constants {
+  PI = "PI",
+  E = "E"
 }
