@@ -52,3 +52,35 @@ The AST is then passed to an Interpreter:
 ### Interpreter
 
 The Interpreter uses the AST to "interpret" and evaluate each expression by traversing the tree, and outputs a result.
+
+## Features
+### Operations
+
+Supported binary operations are (from less to more prioritized):
+| Operation      | Symbol | Example  |
+| -------------- | ------ | -------- |
+| Addition       | +      | `x + y`  |
+| Subtraction    | -      | `x - y`  |
+| Multiplication | *      | `x * y`  |
+| Division       | /      | `x / y`  |
+| Modulo         | %      | `x % y`  |
+| Power          | **     | `x ** y` |
+
+Supported unary operations:
+| Operation      | Symbol | Example  |
+| -------------- | ------ | -------- |
+| Negation       | -      | `-x`     |
+
+Parenthesis:
+| Operator       | Symbol | Example  |
+| -------------- | ------ | -------- |
+| Left Paren.    | (      | `(x...`  |
+| Right Paren.   | )      | `...x)`  |
+
+### Constants
+
+Supported constants:
+| Constant | Value     |
+| -------- | --------- |
+| PI       | 3.1415... |
+| E        | 2.7182... |
